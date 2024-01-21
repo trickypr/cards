@@ -1,0 +1,21 @@
+{{define "title"}}Create deck{{end}}
+
+{{define "main"}}
+<form action="/decks" method="post">
+  <h1>Create Deck</h1>
+
+  <div>
+    <label for="Name">Name</label>
+    <input type="text" name="Name" id="Name">
+  </div> 
+
+  <div>
+    <label for="Description">Description</label>
+    <input type="text" name="Description" id="Description">
+  </div>
+
+  <a href="/decks">Cancel</a>
+  <button type="submit">Create Deck</button>
+</form>
+{{end}}
+

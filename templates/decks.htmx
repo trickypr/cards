@@ -1,0 +1,15 @@
+{{define "title"}}Decks{{end}}
+
+{{define "main"}}
+<h1>Decks</h1>
+
+<div>
+  {{ range . }}
+  <a href="/decks/{{.ID}}">
+    <h2>{{.Name}}</h2>
+    <p>{{.Description}}</p>
+  </a>
+  {{ end }}
+</div>
+{{end}}
+
