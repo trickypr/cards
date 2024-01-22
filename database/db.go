@@ -27,5 +27,24 @@ func InitializeDatabase() *sql.DB {
 		log.Print("DB error")
 		log.Fatal(err)
 	}
+
+	_, err = db.Exec(
+		`
+    CREATE TABLE IF NOT EXISTS card (
+      id TEXT PRIMARY KEY,
+      deck TEXT NOT NULL,
+      one TEXT,
+      two TEXT,
+      
+      CONSTRAINT fk_deck FOREIGN KEY (deck) REFERENCES deck(id)
+    )
+    `,
+	)
+
+	if err != nil {
+		log.Print("DB error")
+		log.Fatal(err)
+	}
+
 	return db
 }

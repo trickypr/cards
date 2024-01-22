@@ -15,7 +15,11 @@ type Deck struct {
 }
 
 func (d *Deck) Create(db *sql.DB) error {
-	id, err := gonanoid.New()
+	id, err := gonanoid.New(10)
+	if err != nil {
+		return err
+	}
+
 	d.ID = id
 
 	s, err := db.Prepare(
@@ -29,7 +33,23 @@ func (d *Deck) Create(db *sql.DB) error {
 		return err
 	}
 
-	return s.QueryRow(d.ID, d.Name, d.Description, d.SideOneLang, d.SideTwoLang).Scan()
+	return s.QueryRow(d.ID, d.Name, d.Description, d.SideOneLang, d.SideTwoLang).Scan(&d.ID)
+}
+
+func GetDeck(db *sql.DB, id string) (Deck, error) {
+	deck := Deck{}
+
+	s, err := db.Prepare("SELECT id, name, description, side_one_lang, side_two_lang FROM deck WHERE id = $1")
+	if err != nil {
+		return deck, err
+	}
+
+	err = s.QueryRow(id).Scan(&deck.ID, &deck.Name, &deck.Description, &deck.SideOneLang, &deck.SideTwoLang)
+	if err != nil {
+		return deck, err
+	}
+
+	return deck, nil
 }
 
 func ReadAllDecks(db *sql.DB) ([]Deck, error) {
@@ -55,4 +75,29 @@ func ReadAllDecks(db *sql.DB) ([]Deck, error) {
 	}
 
 	return decks, nil
+}
+
+func (d *Deck) Cards(db *sql.DB) ([]Card, error) {
+	cards := []Card{}
+	s, err := db.Prepare("SELECT id, deck, one, two FROM card")
+	if err != nil {
+		return cards, err
+	}
+
+	rows, err := s.Query()
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		card := Card{}
+
+		if err := rows.Scan(&card.ID, &card.Deck, &card.One, &card.Two); err != nil {
+			return cards, err
+		}
+
+		cards = append(cards, card)
+	}
+
+	return cards, nil
 }

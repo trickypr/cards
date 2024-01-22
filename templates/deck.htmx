@@ -1,0 +1,23 @@
+{{define "title"}}"{{.Deck.Name}}"{{end}}
+
+{{define "main"}}
+<h1>{{.Deck.Name}}</h1>
+
+<ul>
+  {{ range .Cards }}
+  <li>
+    <a href="/decks/{{$.Deck.ID}}/card/{{.ID}}">
+      <div>
+        {{.One}}
+      </div>
+      <div>
+        {{.Two}}
+      </div>
+    </a>
+  </li>
+  {{ end }}
+</ul>
+
+<a href="/decks/{{.Deck.ID}}/create">New Card</a>
+{{end}}
+

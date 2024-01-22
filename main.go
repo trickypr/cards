@@ -17,9 +17,14 @@ func main() {
 	db := database.InitializeDatabase()
 
 	r.Route("/decks", func(r chi.Router) {
-		r.Get("/", handler.HandleDeckGet(db))
-		r.Post("/", handler.HandleDeckPost(db))
-		r.Get("/create", handler.HandleDeckCreateGet(db))
+		r.Get("/", handler.HandleDecksGet(db))
+		r.Post("/", handler.HandleDecksPost(db))
+		r.Get("/create", handler.HandleDecksCreateGet(db))
+		r.Route("/{deckid}", func(r chi.Router) {
+			r.Get("/", handler.HandleDeckGet(db))
+			r.Post("/", handler.HandleDeckPost(db))
+			r.Get("/create", handler.HandleCreateCardGet(db))
+		})
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", r))

@@ -22,13 +22,13 @@ func RenderDeckList(db *sql.DB, w http.ResponseWriter) {
 	}
 }
 
-func HandleDeckGet(db *sql.DB) http.HandlerFunc {
+func HandleDecksGet(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		RenderDeckList(db, w)
 	})
 }
 
-func HandleDeckPost(db *sql.DB) http.HandlerFunc {
+func HandleDecksPost(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		d := model.Deck{
 			Name:        r.FormValue("Name"),
@@ -45,7 +45,7 @@ func HandleDeckPost(db *sql.DB) http.HandlerFunc {
 	})
 }
 
-func HandleDeckCreateGet(db *sql.DB) http.HandlerFunc {
+func HandleDecksCreateGet(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(
 			template.ParseFiles("./templates/base.htmx", "./templates/createdeck.htmx"),

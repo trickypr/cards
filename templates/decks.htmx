@@ -11,5 +11,7 @@
   </a>
   {{ end }}
 </div>
+
+<a href="/decks/create">Create Deck</a>
 {{end}}
 
