@@ -1,0 +1,18 @@
+{{define "title"}}Edit Card{{end}}
+
+{{define "main"}}
+<form hx-put="/decks/{{.Deck}}/card/{{.ID}}">
+  <div>
+    <label for="One">Side One</label>
+    <input type="text" name="One" value="{{.One}}" id="One">
+  </div>
+
+  <div>
+    <label for="Two">Side Two</label>
+    <input type="text" name="Two" value="{{.Two}}" id="Two">
+  </div>
+  
+  <button type="submit">Update</button>
+</form>
+{{end}}
+

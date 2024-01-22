@@ -24,6 +24,11 @@ func main() {
 			r.Get("/", handler.HandleDeckGet(db))
 			r.Post("/", handler.HandleDeckPost(db))
 			r.Get("/create", handler.HandleCreateCardGet(db))
+
+			r.Route("/card", func(r chi.Router) {
+				r.Get("/{cardid}", handler.HandleCardGet(db))
+				r.Put("/{cardid}", handler.HandleCartPut(db))
+			})
 		})
 	})
 
