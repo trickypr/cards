@@ -1,9 +1,19 @@
+{{ define "stats" }}
+  stats: $persist([0, 0, 0, 0, 0, 0]).as('learn-stats').using(sessionStorage)
+{{ end }}
+
 {{ define "cards" }}
   {{ $lastIndex := -1 }}
   {{ range $index, $value := . }}{{ $lastIndex = $index }}{{ end }}
 
 
-  <div x-show="selected > {{ $lastIndex }}" x-data>
+  <div
+    x-show="selected > {{ $lastIndex }}"
+    x-data
+    {{ if (ne $lastIndex -1) }}
+      x-cloak
+    {{ end }}
+  >
     <div class="card">Loading more...</div>
   </div>
 
@@ -26,23 +36,25 @@
 
   {{ with $value }}
     <div
-      x-cloak
+      {{ if (ne $index 0) }}
+        x-cloak
+      {{ end }}
       class="card__container"
       x-show="selected == index"
       x-data="{ index: {{ $index }}, revealed: false }"
     >
       <div class="card">
         <div>{{ .One }}</div>
-        <div x-show="revealed">{{ .Two }}</div>
+        <div x-cloak x-show="revealed">{{ .Two }}</div>
       </div>
 
       <div class="card__buttons">
         <div x-show="!revealed">
           <button @click="revealed = true">Reveal</button>
         </div>
-        <div x-show="revealed">
+        <div x-cloak x-show="revealed">
           <button
-            @click="selected++"
+            @click="stats[0]++;selected++"
             hx-target="#cards"
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=0&last={{ $last }}`"
@@ -50,7 +62,7 @@
             Forgot
           </button>
           <button
-            @click="selected++"
+            @click="stats[1]++;selected++"
             hx-target="#cards"
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=1&last={{ $last }}`"
@@ -58,7 +70,7 @@
             Wrong, familiar
           </button>
           <button
-            @click="selected++"
+            @click="stats[2]++;selected++"
             hx-target="#cards"
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=2&last={{ $last }}`"
@@ -66,7 +78,7 @@
             Wrong, easy
           </button>
           <button
-            @click="selected++"
+            @click="stats[3]++;selected++"
             hx-target="#cards"
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=3&last={{ $last }}`"
@@ -74,7 +86,7 @@
             Correct, difficult
           </button>
           <button
-            @click="selected++"
+            @click="stats[4]++;selected++"
             hx-target="#cards"
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=4&last={{ $last }}`"
@@ -82,7 +94,7 @@
             Correct, long
           </button>
           <button
-            @click="selected++"
+            @click="stats[5]++;selected++"
             hx-target="#cards"
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=5&last={{ $last }}`"

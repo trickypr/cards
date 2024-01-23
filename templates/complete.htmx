@@ -1,0 +1,98 @@
+{{ define "title" }}Complete review{{ end }}
+
+{{ define "main" }}
+  <script>
+    const colors = [
+      "oklch(70% 0 40)",
+      "oklch(60% 0.1 30)",
+      "oklch(70% 0.1 30)",
+      "oklch(60% 0.1 141)",
+      "oklch(70% 0.1 141)",
+      "oklch(80% 0.1 141)",
+    ];
+
+    colors.forEach((c, i) =>
+      document.documentElement.style.setProperty(`--color-${i}`, c),
+    );
+
+    /**
+     * @param {number[]} stats
+     */
+    function gradient(stats) {
+      const percentageT = stats.reduce((a, b) => a + b, 0) / 100;
+
+      /**
+       * @typedef {object} out
+       * @property {number} before
+       * @property {string[]} vals
+       */
+
+      /**
+       * @param {out} input
+       * @param {number} count
+       * @param {number} index
+       * @return {out}
+       */
+      const reduceFn = ({ before, vals }, count, index) => ({
+        before: before + count,
+        vals: [
+          ...vals,
+          `${colors[index]} ${before / percentageT}% ${(before + count) / percentageT}%`,
+        ],
+      });
+
+      return stats.reduce(reduceFn, { before: 0, vals: [] }).vals.join(", ");
+    }
+  </script>
+
+  <style>
+    .pie {
+      width: 8rem;
+      height: 8rem;
+      border-radius: 50%;
+    }
+
+    .indicator {
+      display: inline-block;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+    }
+
+    ul {
+      padding: 0;
+    }
+
+    li {
+      list-style-type: none;
+    }
+  </style>
+
+  <div x-data="{ {{ template "stats" }} }">
+    <div>
+      <div
+        class="pie"
+        x-data
+        :style="`background: conic-gradient(${gradient(stats)})`"
+      ></div>
+    </div>
+
+    <ul>
+      {{ $labels := (arr "Forgot" "Wrong, familiar" "Wrong, easy" "Correct, difficult" "Correct, long" "Correct, Instant") }}
+      {{ range $index, $label := $labels }}
+        <li>
+          <span
+            class="indicator"
+            style="background: var(--color-{{ $index }})"
+          ></span>
+          <b>{{ $label }}:</b>
+          <span x-text="stats[{{ $index }}]"></span>
+        </li>
+      {{ end }}
+    </ul>
+
+    <a href="/decks/{{ . }}">
+      <button @click="stats=[0,0,0,0,0,0]">Continue</button>
+    </a>
+  </div>
+{{ end }}

@@ -1,17 +1,33 @@
-{{define "base"}}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>{{template "title" .}} - Cards</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{{ define "base" }}
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <title>{{ template "title" . }} - Cards</title>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <script defer src="https://cdn.jsdelivr.net/npm/htmx.org@1.9.10/dist/htmx.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  </head>
-  <body>
-    {{template "main" .}}
-  </body>
-</html>
-{{end}}
+      <style>
+        [x-cloak] {
+          display: none !important;
+        }
+      </style>
 
+      <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"
+      ></script>
+      <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      ></script>
+
+      <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/htmx.org@1.9.10/dist/htmx.min.js"
+      ></script>
+    </head>
+    <body>
+      {{ template "main" . }}
+    </body>
+  </html>
+{{ end }}

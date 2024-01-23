@@ -51,14 +51,26 @@ func HandleReviewGet(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		// if len(cards) == 0 {
-		// 	http.Redirect(w, r, "/decks/"+deckid+"/review", 307)
-		// 	return
-		// }
+		if len(cards) == 0 {
+			http.Redirect(w, r, "/decks/"+deckid+"/complete", 307)
+			return
+		}
 
 		tmpl := TmplFiles("./templates/base.htmx", "./templates/review.htmx", "./templates/partials/card.htmx")
 		if err := tmpl.ExecuteTemplate(w, "base", cards); err != nil {
 			slog.Error("render template", err)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+	})
+}
+
+func HandleCompleteGet(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		deckid := chi.URLParam(r, "deckid")
+
+		tmpl := TmplFiles("./templates/base.htmx", "./templates/complete.htmx", "./templates/partials/card.htmx")
+		if err := tmpl.ExecuteTemplate(w, "base", deckid); err != nil {
+			slog.Error("rendering template", err)
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	})

@@ -2,7 +2,7 @@
 
 {{ define "main" }}
   <div
-    x-data="{ selected: 0, result: 'evaluation' }"
+    x-data="{ selected: 0, result: 'evaluation', {{ template "stats" }} }"
     id="cards"
     @reset="selected = 0"
   >

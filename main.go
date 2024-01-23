@@ -40,6 +40,7 @@ func main() {
 			r.Get("/create", handler.HandleCreateCardGet(db))
 			r.Get("/learn", handler.HandleLearnGet(db))
 			r.Get("/review", handler.HandleReviewGet(db))
+			r.Get("/complete", handler.HandleCompleteGet(db))
 
 			r.Route("/card", func(r chi.Router) {
 				r.Get("/{cardid}", handler.HandleCardGet(db))
