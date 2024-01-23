@@ -78,26 +78,20 @@ func ReadAllDecks(db *sql.DB) ([]Deck, error) {
 }
 
 func (d *Deck) Cards(db *sql.DB) ([]Card, error) {
-	cards := []Card{}
-	s, err := db.Prepare("SELECT id, deck, one, two FROM card")
-	if err != nil {
-		return cards, err
-	}
-
-	rows, err := s.Query()
+	s, err := db.Prepare(`
+    SELECT id, deck, one, two, repition_number, 
+            easiness, interrepition_interval, last_review, last_quality
+    FROM card
+    WHERE deck = $1
+  `)
 	if err != nil {
 		return nil, err
 	}
 
-	for rows.Next() {
-		card := Card{}
-
-		if err := rows.Scan(&card.ID, &card.Deck, &card.One, &card.Two); err != nil {
-			return cards, err
-		}
-
-		cards = append(cards, card)
+	rows, err := s.Query(&d.ID)
+	if err != nil {
+		return nil, err
 	}
 
-	return cards, nil
+	return CardsFromRows(rows)
 }

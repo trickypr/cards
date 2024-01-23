@@ -1,0 +1,96 @@
+{{ define "cards" }}
+  {{ $lastIndex := 0 }}
+  {{ range $index, $value := . }}{{ $lastIndex = $index }}{{ end }}
+
+
+  <div x-show="selected > {{ $lastIndex }}" x-data>
+    <div class="card">Loading more...</div>
+  </div>
+
+  {{ range $index, $value := . }}
+    {{ template "card" (arr $index (eq $index $lastIndex) $value) }}
+  {{ end }}
+
+
+  <script defer>
+    document
+      .getElementById("learn-cards")
+      .dispatchEvent(new CustomEvent("reset", {}));
+  </script>
+{{ end }}
+
+{{ define "card" }}
+  {{ $index := index . 0 }}
+  {{ $last := index . 1 }}
+  {{ $value := index . 2 }}
+
+  {{ with $value }}
+    <div
+      x-cloak
+      class="card__container"
+      x-show="selected == index"
+      x-data="{ index: {{ $index }}, revealed: false, isLast: {{ $last }} }"
+    >
+      <div class="card">
+        <div>{{ .One }}</div>
+        <div x-show="revealed">{{ .Two }}</div>
+      </div>
+
+      <div class="card__buttons">
+        <div x-show="!revealed">
+          <button @click="revealed = true">Reveal</button>
+        </div>
+        <div x-show="revealed">
+          <button
+            @click="selected++"
+            hx-target="#learn-cards"
+            :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
+            hx-patch="/cards/{{ .ID }}/evaluation?q=0&last={{ $last }}"
+          >
+            Forgot
+          </button>
+          <button
+            @click="selected++"
+            hx-target="#learn-cards"
+            :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
+            hx-patch="/cards/{{ .ID }}/evaluation?q=1&last={{ $last }}"
+          >
+            Wrong, familiar
+          </button>
+          <button
+            @click="selected++"
+            hx-target="#learn-cards"
+            :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
+            hx-patch="/cards/{{ .ID }}/evaluation?q=2&last={{ $last }}"
+          >
+            Wrong, easy
+          </button>
+          <button
+            @click="selected++"
+            hx-target="#learn-cards"
+            :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
+            hx-patch="/cards/{{ .ID }}/evaluation?q=3&last={{ $last }}"
+          >
+            Correct, difficult
+          </button>
+          <button
+            @click="selected++"
+            hx-target="#learn-cards"
+            :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
+            hx-patch="/cards/{{ .ID }}/evaluation?q=4&last={{ $last }}"
+          >
+            Correct, long
+          </button>
+          <button
+            @click="selected++"
+            hx-target="#learn-cards"
+            :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
+            hx-patch="/cards/{{ .ID }}/evaluation?q=5&last={{ $last }}"
+          >
+            Correct, instant
+          </button>
+        </div>
+      </div>
+    </div>
+  {{ end }}
+{{ end }}

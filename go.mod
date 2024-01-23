@@ -4,6 +4,7 @@ go 1.21.5
 
 require (
 	github.com/go-chi/chi/v5 v5.0.11 // indirect
+	github.com/google/brotli/go/cbrotli v0.0.0-20240116120200-adbc354d23af // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/matoous/go-nanoid/v2 v2.0.0 // indirect
 	github.com/mattn/go-sqlite3 v1.14.19 // indirect

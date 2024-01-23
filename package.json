@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "devDependencies": {
+    "prettier": "^3.2.4",
+    "prettier-plugin-go-template": "^0.0.15"
+  },
+  "prettier": {
+    "plugins": ["prettier-plugin-go-template"],
+    "overrides": [
+      {
+        "files": ["*.htmx"],
+        "options": {
+          "parser": "go-template"
+        }
+      }
+    ]
+  }
+}

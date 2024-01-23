@@ -19,5 +19,6 @@
 </ul>
 
 <a href="/decks/{{.Deck.ID}}/create">New Card</a>
+<a href="/decks/{{.Deck.ID}}/learn">Learn</a>
 {{end}}
 

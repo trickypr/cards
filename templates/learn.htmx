@@ -1,0 +1,11 @@
+{{ define "title" }}Learn{{ end }}
+
+{{ define "main" }}
+  <div
+    x-data="{ selected: 0, loading: false }"
+    id="learn-cards"
+    @reset="selected = 0"
+  >
+    {{ template "cards" . }}
+  </div>
+{{ end }}
