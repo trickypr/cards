@@ -59,6 +59,21 @@ func (c *Card) UpdateContents(db *sql.DB) error {
 }
 
 func (c *Card) Review(db *sql.DB, quality int8) error {
+	s, err := db.Prepare(`
+    UPDATE card
+    SET last_quality = $1, last_review = datetime('now')
+    WHERE id = $2
+    RETURNING last_review
+  `)
+	if err != nil {
+		return err
+	}
+
+	c.LastQuality = quality
+	return s.QueryRow(quality, c.ID).Scan(&c.LastReview)
+}
+
+func (c *Card) Learn(db *sql.DB, quality int8) error {
 	// https://en.wikipedia.org/wiki/SuperMemo#Description_of_SM-2_algorithm
 	c.LastQuality = quality
 

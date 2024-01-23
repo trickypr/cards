@@ -68,7 +68,7 @@ func HandleCardEvaluationPatch(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		err = card.Review(db, int8(quality))
+		err = card.Learn(db, int8(quality))
 		if err != nil {
 			slog.Error("reviewing card", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -86,13 +86,62 @@ func HandleCardEvaluationPatch(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		if len(toLearn) != 0 {
-			tmpl := TmplFiles("./templates/partials/card.htmx")
-			if err := tmpl.ExecuteTemplate(w, "cards", toLearn); err != nil {
-				slog.Error("rendering template", err)
-			}
-		} else {
+		tmpl := TmplFiles("./templates/partials/card.htmx")
+		if err := tmpl.ExecuteTemplate(w, "cards", toLearn); err != nil {
+			slog.Error("rendering template", err)
+		}
+
+		if len(toLearn) == 0 {
 			w.Header().Add("HX-Location", "/decks/"+card.Deck+"/review")
+		}
+	})
+}
+
+func HandleCardReviewPatch(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		query := r.URL.Query()
+		quality, err := strconv.Atoi(query.Get("q"))
+		last := query.Get("last") == "true"
+		if err != nil {
+			slog.Error("parsing quality", err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		cardid := chi.URLParam(r, "cardid")
+		card, err := model.GetCard(db, cardid)
+		if err != nil {
+			slog.Error("fetching card", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		err = card.Review(db, int8(quality))
+		if err != nil {
+			slog.Error("reviewing card", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		if !last {
+			return
+		}
+
+		toLearn, err := model.CardsToReview(db, card.Deck)
+		if err != nil {
+			slog.Error("fetching cards to learn", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		tmpl := TmplFiles("./templates/partials/card.htmx")
+		if err := tmpl.ExecuteTemplate(w, "cards", toLearn); err != nil {
+			slog.Error("rendering template", err)
+		}
+
+		if len(toLearn) == 0 {
+			//		w.Header().Add("HX-Location", "/decks/"+card.Deck+"/review")
+			slog.Info("todo: stats screen")
 		}
 	})
 }

@@ -39,6 +39,7 @@ func main() {
 			r.Post("/", handler.HandleDeckPost(db))
 			r.Get("/create", handler.HandleCreateCardGet(db))
 			r.Get("/learn", handler.HandleLearnGet(db))
+			r.Get("/review", handler.HandleReviewGet(db))
 
 			r.Route("/card", func(r chi.Router) {
 				r.Get("/{cardid}", handler.HandleCardGet(db))
@@ -51,6 +52,7 @@ func main() {
 		r.Use(AlwaysHTML)
 
 		r.Patch("/evaluation", handler.HandleCardEvaluationPatch(db))
+		r.Patch("/review", handler.HandleCardReviewPatch(db))
 	})
 
 	fs := http.FileServer(http.Dir("static"))

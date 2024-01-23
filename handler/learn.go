@@ -40,3 +40,26 @@ func HandleLearnGet(db *sql.DB) http.HandlerFunc {
 		}
 	})
 }
+
+func HandleReviewGet(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		deckid := chi.URLParam(r, "deckid")
+		cards, err := model.CardsToReview(db, deckid)
+		if err != nil {
+			slog.Error("fetching cards to review", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		// if len(cards) == 0 {
+		// 	http.Redirect(w, r, "/decks/"+deckid+"/review", 307)
+		// 	return
+		// }
+
+		tmpl := TmplFiles("./templates/base.htmx", "./templates/review.htmx", "./templates/partials/card.htmx")
+		if err := tmpl.ExecuteTemplate(w, "base", cards); err != nil {
+			slog.Error("render template", err)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+	})
+}

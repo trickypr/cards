@@ -1,8 +1,8 @@
-{{ define "title" }}Learn{{ end }}
+{{ define "title" }}Review{{ end }}
 
 {{ define "main" }}
   <div
-    x-data="{ selected: 0, result: 'evaluation' }"
+    x-data="{ selected: 0, result: 'review' }"
     id="cards"
     @reset="selected = 0"
   >
