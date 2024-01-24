@@ -6,6 +6,8 @@ import (
 	"html/template"
 	"log/slog"
 	"net/http"
+
+	"github.com/go-chi/jwtauth/v5"
 )
 
 func RenderDeckList(db *sql.DB, w http.ResponseWriter) {
@@ -35,7 +37,8 @@ func HandleDecksPost(db *sql.DB) http.HandlerFunc {
 			Description: r.FormValue("Description"),
 		}
 
-		if err := d.Create(db); err != nil {
+		_, data, _ := jwtauth.FromContext(r.Context())
+		if err := d.Create(db, data["id"].(string)); err != nil {
 			slog.Error("creating deck", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return

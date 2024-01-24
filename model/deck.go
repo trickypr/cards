@@ -14,7 +14,15 @@ type Deck struct {
 	SideTwoLang string
 }
 
-func (d *Deck) Create(db *sql.DB) error {
+func IsDeckOwner(db *sql.DB, userid string, deckid string) bool {
+	count := -1
+	row := db.QueryRow("SELECT COUNT(*) FROM deck WHERE id = $1 AND owner = $2", deckid, userid)
+	row.Scan(&count)
+
+	return count > 0
+}
+
+func (d *Deck) Create(db *sql.DB, owner string) error {
 	id, err := gonanoid.New(10)
 	if err != nil {
 		return err
@@ -24,8 +32,8 @@ func (d *Deck) Create(db *sql.DB) error {
 
 	s, err := db.Prepare(
 		`
-      INSERT INTO deck (id, name, description, side_one_lang, side_two_lang)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO deck (id, name, description, side_one_lang, side_two_lang, owner)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id
     `,
 	)
@@ -33,7 +41,7 @@ func (d *Deck) Create(db *sql.DB) error {
 		return err
 	}
 
-	return s.QueryRow(d.ID, d.Name, d.Description, d.SideOneLang, d.SideTwoLang).Scan(&d.ID)
+	return s.QueryRow(d.ID, d.Name, d.Description, d.SideOneLang, d.SideTwoLang, owner).Scan(&d.ID)
 }
 
 func GetDeck(db *sql.DB, id string) (Deck, error) {

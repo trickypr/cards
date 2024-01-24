@@ -125,6 +125,7 @@ form {
 
   input {
     padding: 0.25rem 0.5rem;
+    width: 100%;
 
     border-radius: 0.5rem;
     border: var(--gray-95) solid 0.125rem;
@@ -138,12 +139,16 @@ form {
 footer {
   display: flex;
   gap: 0.25rem;
+  margin-top: 2rem;
 }
 
 @media (max-width: 40rem) {
+  body {
+    margin: 1rem;
+  }
+
   form input {
     padding: 0.5rem 1rem;
-    width: 100%;
     font-size: 1rem;
   }
 
@@ -157,6 +162,7 @@ footer {
     bottom: 0;
     width: 100%;
 
+    margin-top: 0;
     padding: 0.75rem;
     border-top: var(--gray-95) solid 0.125rem;
     background-color: white;

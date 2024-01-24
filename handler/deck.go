@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth/v5"
 )
 
 type DeckTemplateData struct {
@@ -59,12 +60,14 @@ func HandleDeckPost(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		_, data, _ := jwtauth.FromContext(r.Context())
+
 		card := model.Card{
 			Deck: deckId,
 			One:  r.FormValue("One"),
 			Two:  r.FormValue("Two"),
 		}
-		card.Create(db)
+		card.Create(db, data["id"].(string))
 
 		RenderDeck(db, deck, w, r)
 	})

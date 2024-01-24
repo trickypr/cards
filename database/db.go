@@ -22,10 +22,13 @@ func InitializeDatabase() *sql.DB {
 	ExecCrash(db, `
     CREATE TABLE IF NOT EXISTS deck (
       id TEXT PRIMARY KEY,
+      owner TEXT NOT NULL,
       name TEXT,
       description TEXT,
       side_one_lang TEXT,
-      side_two_lang TEXT
+      side_two_lang TEXT,
+
+      CONSTRAINT fk_owner FOREIGN KEY (owner) REFERENCES user(id)
     )
     `,
 	)
@@ -34,6 +37,7 @@ func InitializeDatabase() *sql.DB {
     CREATE TABLE IF NOT EXISTS card (
       id TEXT PRIMARY KEY,
       deck TEXT NOT NULL,
+      owner TEXT NOT NULL,
       one TEXT,
       two TEXT,
 
@@ -43,10 +47,20 @@ func InitializeDatabase() *sql.DB {
       last_review             TEXT    DEFAULT '2013-10-07 08:23:19.120',
       last_quality            TINYINT DEFAULT 0,
       
-      CONSTRAINT fk_deck FOREIGN KEY (deck) REFERENCES deck(id)
+      CONSTRAINT fk_deck FOREIGN KEY (deck) REFERENCES deck(id),
+      CONSTRAINT fk_owner FOREIGN KEY (owner) REFERENCES user(id)
     )
     `,
 	)
+
+	ExecCrash(db, `
+    CREATE TABLE IF NOT EXISTS user (
+      id       TEXT PRIMARY KEY,
+      username TEXT NOT NULL,
+
+      password_hash TEXT NOT NULL
+    )
+  `)
 
 	return db
 }

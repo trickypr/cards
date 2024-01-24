@@ -1,0 +1,33 @@
+{{ define "title" }}Signup{{ end }}
+
+{{ define "main" }}
+  {{ if (ne . nil) }}
+    <div class="error">
+      {{ . }}
+    </div>
+  {{ end }}
+
+
+  <form action="/auth/signup" method="POST">
+    <div>
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" />
+    </div>
+
+    <div>
+      <label for="password1">Password</label>
+      <input type="password" name="password1" id="password1" />
+    </div>
+
+    <div>
+      <label for="password2">Repeat password</label>
+      <input type="password" name="password2" id="password2" />
+    </div>
+
+    <p>Already have an account? <a href="/auth/login">Login</a></p>
+
+    <footer>
+      <button type="submit">Signup</button>
+    </footer>
+  </form>
+{{ end }}

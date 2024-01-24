@@ -14,6 +14,9 @@
       <input type="text" name="Two" id="Two" />
     </div>
 
-    <footer><button type="submit" class="grow">Create</button></footer>
+    <footer>
+      <a href="/decks/{{ .ID }}"><button>Cancel</button></a>
+      <button type="submit" class="grow">Create</button>
+    </footer>
   </form>
 {{ end }}

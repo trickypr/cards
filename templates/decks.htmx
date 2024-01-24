@@ -12,11 +12,21 @@
         font-size: 0.75rem;
       }
     }
+
+    p {
+      padding: 1rem;
+      margin: 0;
+      text-align: center;
+    }
   </style>
 
   <h1>Decks</h1>
 
   <ul class="object-list">
+    {{ if (eq (len .) 0) }}
+      <p>No decks</p>
+    {{ end }}
+
     {{ range . }}
       <li>
         <a href="/decks/{{ .ID }}">

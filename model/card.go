@@ -20,7 +20,15 @@ type Card struct {
 	LastQuality           int8
 }
 
-func (c *Card) Create(db *sql.DB) error {
+func IsCardOwner(db *sql.DB, userid string, cardid string) bool {
+	count := -1
+	row := db.QueryRow("SELECT COUNT(*) FROM card WHERE id = $1 AND owner = $2", cardid, userid)
+	row.Scan(&count)
+
+	return count > 0
+}
+
+func (c *Card) Create(db *sql.DB, owner string) error {
 	id, err := gonanoid.New()
 	if err != nil {
 		return err
@@ -30,8 +38,8 @@ func (c *Card) Create(db *sql.DB) error {
 
 	s, err := db.Prepare(
 		`
-      INSERT INTO card (id, deck, one, two)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO card (id, deck, one, two, owner)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING id
     `,
 	)
@@ -39,7 +47,7 @@ func (c *Card) Create(db *sql.DB) error {
 		return err
 	}
 
-	return s.QueryRow(c.ID, c.Deck, c.One, c.Two).Scan(&c.ID)
+	return s.QueryRow(c.ID, c.Deck, c.One, c.Two, owner).Scan(&c.ID)
 }
 
 func (c *Card) UpdateContents(db *sql.DB) error {
