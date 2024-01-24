@@ -15,11 +15,13 @@
       document.documentElement.style.setProperty(`--color-${i}`, c),
     );
 
+    const total = (n) => n.reduce((a, b) => a + b, 0);
+
     /**
      * @param {number[]} stats
      */
     function gradient(stats) {
-      const percentageT = stats.reduce((a, b) => a + b, 0) / 100;
+      const percentageT = total(stats) / 100;
 
       /**
        * @typedef {object} out
@@ -69,30 +71,41 @@
   </style>
 
   <div x-data="{ {{ template "stats" }} }">
-    <div>
-      <div
-        class="pie"
-        x-data
-        :style="`background: conic-gradient(${gradient(stats)})`"
-      ></div>
+    <div x-data="{ count: total(stats) }" x-show="count == 0">
+      <h1>No cards to review</h1>
     </div>
 
-    <ul>
-      {{ $labels := (arr "Forgot" "Wrong, familiar" "Wrong, easy" "Correct, difficult" "Correct, long" "Correct, Instant") }}
-      {{ range $index, $label := $labels }}
-        <li>
-          <span
-            class="indicator"
-            style="background: var(--color-{{ $index }})"
-          ></span>
-          <b>{{ $label }}:</b>
-          <span x-text="stats[{{ $index }}]"></span>
-        </li>
-      {{ end }}
-    </ul>
+    <div
+      x-data="{ count:  stats.reduce((a, b) => a + b, 0) }"
+      x-show="count != 0"
+    >
+      <div>
+        <div
+          class="pie"
+          x-data
+          :style="`background: conic-gradient(${gradient(stats)})`"
+        ></div>
+      </div>
 
-    <a href="/decks/{{ . }}">
-      <button @click="stats=[0,0,0,0,0,0]">Continue</button>
-    </a>
+      <ul>
+        {{ $labels := (arr "Forgot" "Wrong, familiar" "Wrong, easy" "Correct, difficult" "Correct, long" "Correct, Instant") }}
+        {{ range $index, $label := $labels }}
+          <li>
+            <span
+              class="indicator"
+              style="background: var(--color-{{ $index }})"
+            ></span>
+            <b>{{ $label }}:</b>
+            <span x-text="stats[{{ $index }}]"></span>
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+
+    <footer>
+      <a href="/decks/{{ . }}" class="grow">
+        <button @click="stats=[0,0,0,0,0,0]">Continue</button>
+      </a>
+    </footer>
   </div>
 {{ end }}

@@ -1,0 +1,168 @@
+[x-cloak] {
+  display: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --gray-10: oklch(10% 0 141);
+  --gray-20: oklch(20% 0 141);
+  --gray-30: oklch(30% 0 141);
+  --gray-40: oklch(40% 0 141);
+  --gray-50: oklch(50% 0 141);
+  --gray-60: oklch(60% 0 141);
+  --gray-70: oklch(70% 0 141);
+  --gray-80: oklch(80% 0 141);
+  --gray-90: oklch(90% 0 141);
+  --gray-95: oklch(95% 0 141);
+  --gray-96: oklch(96% 0 141);
+  --gray-98: oklch(98% 0 141);
+}
+
+body {
+  font-family: "Lora", serif;
+  background-color: var(--gray-98);
+  margin: 1rem auto;
+  max-width: 40rem;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Crimson Text", serif;
+  font-weight: 700;
+  margin: 0;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 0;
+}
+
+p {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+ul.object-list {
+  border: var(--gray-95) solid 0.125rem;
+  border-bottom: var(--gray-95) solid 0.25rem;
+  border-radius: 1rem;
+  overflow: hidden;
+
+  padding: 0;
+  background-color: white;
+
+  li {
+    list-style-type: none;
+    padding: 0.5rem 0.75rem;
+    position: relative;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--gray-98);
+    }
+
+    &::after {
+      content: "";
+      background-image: url(https://cdn.jsdelivr.net/npm/@tabler/icons@2.46.0/icons/chevron-right.svg);
+      background-size: 100% auto;
+      display: block;
+
+      width: 1rem;
+      height: 1rem;
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+}
+
+button {
+  background-color: white;
+  color: black;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: var(--gray-95) solid 0.125rem;
+  border-bottom: var(--gray-95) solid 0.25rem;
+
+  font-family: "Lora", serif;
+  font-weight: 500;
+
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--gray-98);
+  }
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+form {
+  > div {
+    margin-bottom: 0.5rem;
+    > * {
+      display: block;
+    }
+  }
+
+  label {
+    font-size: 0.75rem;
+    color: var(--gray-40);
+    font-weight: 600;
+  }
+
+  input {
+    padding: 0.25rem 0.5rem;
+
+    border-radius: 0.5rem;
+    border: var(--gray-95) solid 0.125rem;
+    border-bottom: var(--gray-95) solid 0.25rem;
+
+    font-family: "Lora", serif;
+    font-weight: 500;
+  }
+}
+
+footer {
+  display: flex;
+  gap: 0.25rem;
+}
+
+@media (max-width: 40rem) {
+  form input {
+    padding: 0.5rem 1rem;
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  button {
+    font-size: 1rem;
+  }
+
+  footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+
+    padding: 0.75rem;
+    border-top: var(--gray-95) solid 0.125rem;
+    background-color: white;
+
+    a {
+      text-decoration: none;
+    }
+  }
+}

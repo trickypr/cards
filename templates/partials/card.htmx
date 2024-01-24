@@ -8,6 +8,7 @@
 
 
   <div
+    class="card__container"
     x-show="selected > {{ $lastIndex }}"
     x-data
     {{ if (ne $lastIndex -1) }}
@@ -41,18 +42,19 @@
       {{ end }}
       class="card__container"
       x-show="selected == index"
-      x-data="{ index: {{ $index }}, revealed: false }"
+      x-data="{ index: {{ $index }}, revealed: false, kind: '' }"
     >
-      <div class="card">
-        <div>{{ .One }}</div>
-        <div x-cloak x-show="revealed">{{ .Two }}</div>
+      <div class="card" :class="{ 'revealed': revealed }">
+        <div class="one">{{ .One }}</div>
+        <div class="two">{{ .Two }}</div>
       </div>
 
       <div class="card__buttons">
-        <div x-show="!revealed">
+        <footer x-show="!revealed">
           <button @click="revealed = true">Reveal</button>
-        </div>
-        <div x-cloak x-show="revealed">
+        </footer>
+
+        <footer x-cloak x-show="revealed && kind == ''">
           <button
             @click="stats[0]++;selected++"
             hx-target="#cards"
@@ -61,13 +63,18 @@
           >
             Forgot
           </button>
+          <button @click="kind='wrong'">Wrong</button>
+          <button @click="kind='correct'">Correct</button>
+        </footer>
+
+        <footer x-cloak x-show="kind == 'wrong'">
           <button
             @click="stats[1]++;selected++"
             hx-target="#cards"
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=1&last={{ $last }}`"
           >
-            Wrong, familiar
+            Familiar
           </button>
           <button
             @click="stats[2]++;selected++"
@@ -75,15 +82,18 @@
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=2&last={{ $last }}`"
           >
-            Wrong, easy
+            Easy
           </button>
+        </footer>
+
+        <footer x-cloak x-show="kind=='correct'">
           <button
             @click="stats[3]++;selected++"
             hx-target="#cards"
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=3&last={{ $last }}`"
           >
-            Correct, difficult
+            Difficult
           </button>
           <button
             @click="stats[4]++;selected++"
@@ -91,7 +101,7 @@
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=4&last={{ $last }}`"
           >
-            Correct, long
+            Long
           </button>
           <button
             @click="stats[5]++;selected++"
@@ -99,9 +109,9 @@
             :hx-swap="{{ $last }} ? 'innerHTML' : 'none'"
             :hx-patch="`/cards/{{ .ID }}/${result}?q=5&last={{ $last }}`"
           >
-            Correct, instant
+            Instant
           </button>
-        </div>
+        </footer>
       </div>
     </div>
   {{ end }}

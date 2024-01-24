@@ -45,7 +45,7 @@ func HandleCardPut(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		http.Redirect(w, r, "/decks/"+deckid, 303)
+		w.Header().Add("HX-Location", "/decks/"+deckid)
 	})
 }
 
@@ -86,13 +86,15 @@ func HandleCardEvaluationPatch(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		if len(toLearn) == 0 {
+			w.Header().Add("HX-Location", "/decks/"+card.Deck+"/review")
+			return
+		}
+
 		tmpl := TmplFiles("./templates/partials/card.htmx")
 		if err := tmpl.ExecuteTemplate(w, "cards", toLearn); err != nil {
 			slog.Error("rendering template", err)
-		}
-
-		if len(toLearn) == 0 {
-			w.Header().Add("HX-Location", "/decks/"+card.Deck+"/review")
+			return
 		}
 	})
 }
@@ -134,14 +136,14 @@ func HandleCardReviewPatch(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		if len(toLearn) == 0 {
+			http.Redirect(w, r, "/decks/"+card.Deck+"/complete", 307)
+			return
+		}
+
 		tmpl := TmplFiles("./templates/partials/card.htmx")
 		if err := tmpl.ExecuteTemplate(w, "cards", toLearn); err != nil {
 			slog.Error("rendering template", err)
-		}
-
-		if len(toLearn) == 0 {
-			//		w.Header().Add("HX-Location", "/decks/"+card.Deck+"/review")
-			slog.Info("todo: stats screen")
 		}
 	})
 }

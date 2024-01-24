@@ -1,24 +1,51 @@
-{{define "title"}}"{{.Deck.Name}}"{{end}}
+{{ define "title" }}"{{ .Deck.Name }}"{{ end }}
 
-{{define "main"}}
-<h1>{{.Deck.Name}}</h1>
+{{ define "main" }}
+  <style>
+    li {
+      .qstn {
+        font-weight: 600;
+      }
 
-<ul>
-  {{ range .Cards }}
-  <li>
-    <a href="/decks/{{$.Deck.ID}}/card/{{.ID}}">
-      <div>
-        {{.One}}
-      </div>
-      <div>
-        {{.Two}}
-      </div>
-    </a>
-  </li>
+      .ans {
+        color: var(--gray-40);
+        font-size: 0.75rem;
+      }
+    }
+
+    .sub {
+      margin-top: -0.75rem;
+      color: var(--gray-40);
+    }
+  </style>
+
+  <h1>{{ .Deck.Name }}</h1>
+  <p class="sub">{{ .Deck.Description }}</p>
+
+  {{ if (eq (len .Cards) 0) }}
+    <p>No cards added yet</p>
+  {{ else }}
+    <ul class="object-list">
+      {{ range .Cards }}
+        <li>
+          <a href="/decks/{{ $.Deck.ID }}/card/{{ .ID }}">
+            <div class="qstn">
+              {{ .One }}
+            </div>
+            <div class="ans">
+              {{ .Two }}
+            </div>
+          </a>
+        </li>
+      {{ end }}
+    </ul>
   {{ end }}
-</ul>
 
-<a href="/decks/{{.Deck.ID}}/create">New Card</a>
-<a href="/decks/{{.Deck.ID}}/learn">Learn</a>
-{{end}}
 
+  <footer>
+    <a href="/decks/{{ .Deck.ID }}/create"><button>New Card</button></a>
+    <a href="/decks/{{ .Deck.ID }}/learn" class="grow"
+      ><button>Learn</button></a
+    >
+  </footer>
+{{ end }}

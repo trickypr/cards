@@ -27,6 +27,7 @@ func main() {
 		})
 	})
 	r.Use(middleware.Compress(5))
+	// r.Use(compressor.Handler)
 
 	r.Route("/decks", func(r chi.Router) {
 		r.Use(AlwaysHTML)
@@ -59,7 +60,7 @@ func main() {
 	fs := http.FileServer(http.Dir("static"))
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8080", r))
 }
 
 func AlwaysHTML(h http.Handler) http.Handler {

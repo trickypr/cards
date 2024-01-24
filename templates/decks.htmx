@@ -1,17 +1,33 @@
-{{define "title"}}Decks{{end}}
+{{ define "title" }}Decks{{ end }}
 
-{{define "main"}}
-<h1>Decks</h1>
+{{ define "main" }}
+  <style>
+    li {
+      .name {
+        font-weight: 600;
+      }
 
-<div>
-  {{ range . }}
-  <a href="/decks/{{.ID}}">
-    <h2>{{.Name}}</h2>
-    <p>{{.Description}}</p>
-  </a>
-  {{ end }}
-</div>
+      .desc {
+        color: var(--gray-40);
+        font-size: 0.75rem;
+      }
+    }
+  </style>
 
-<a href="/decks/create">Create Deck</a>
-{{end}}
+  <h1>Decks</h1>
 
+  <ul class="object-list">
+    {{ range . }}
+      <li>
+        <a href="/decks/{{ .ID }}">
+          <div class="name">{{ .Name }}</div>
+          <div class="desc">{{ .Description }}</div>
+        </a>
+      </li>
+    {{ end }}
+  </ul>
+
+  <footer>
+    <a href="/decks/create" class="grow"><button>Create Deck</button></a>
+  </footer>
+{{ end }}

@@ -1,17 +1,19 @@
-{{define "title"}}Create Card{{end}}
+{{ define "title" }}Create Card{{ end }}
 
-{{define "main"}}
-<form action="/decks/{{.ID}}" method="post">
-  <div>
-    <label for="One">Side one:</label>
-    <input type="text" name="One" id="One">
-  </div>
+{{ define "main" }}
+  <h1>Create Card</h1>
 
-  <div>
-    <label for="Two">Side two:</label>
-    <input type="text" name="Two" id="Two">
-  </div>
+  <form action="/decks/{{ .ID }}" method="post">
+    <div>
+      <label for="One">Side one:</label>
+      <input type="text" name="One" id="One" />
+    </div>
 
-  <button type="select">Create</button>
-</form>
-{{end}}
+    <div>
+      <label for="Two">Side two:</label>
+      <input type="text" name="Two" id="Two" />
+    </div>
+
+    <footer><button type="submit" class="grow">Create</button></footer>
+  </form>
+{{ end }}
