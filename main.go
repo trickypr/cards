@@ -5,8 +5,11 @@ import (
 	"cards/handler"
 	"cards/model"
 	"database/sql"
+	"errors"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -14,9 +17,18 @@ import (
 	"github.com/lestrrat-go/jwx/v2/jwt"
 
 	_ "github.com/mattn/go-sqlite3"
+	cp "github.com/otiai10/copy"
 )
 
 func main() {
+	if _, err := os.Stat("templates"); errors.Is(err, os.ErrNotExist) {
+		err := cp.Copy("/templates", "./templates/")
+		if err != nil {
+			log.Fatal(err)
+		}
+		slog.Info("Copied templates directory")
+	}
+
 	r := chi.NewRouter()
 
 	db := database.InitializeDatabase()
