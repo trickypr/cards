@@ -29,6 +29,14 @@ func main() {
 		slog.Info("Copied templates directory")
 	}
 
+	if _, err := os.Stat("static"); errors.Is(err, os.ErrNotExist) {
+		err := cp.Copy("/static", "./static/")
+		if err != nil {
+			log.Fatal(err)
+		}
+		slog.Info("Copied static directory")
+	}
+
 	r := chi.NewRouter()
 
 	db := database.InitializeDatabase()

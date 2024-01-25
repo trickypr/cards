@@ -17,6 +17,7 @@ RUN go build
 WORKDIR /dist
 RUN cp /build/cards ./cards
 RUN cp -r /build/templates .
+RUN cp -r /build/static .
 
 # Optional: in case your application uses dynamic linking (often the case with CGO), 
 # this will collect dependent libraries so they're later copied to the final image
