@@ -23,7 +23,7 @@ RUN cp -r /build/templates .
 # NOTE: make sure you honor the license terms of the libraries you copy and distribute
 RUN ldd cards | tr -s '[:blank:]' '\n' | grep '^/' | \
     xargs -I % sh -c 'mkdir -p $(dirname ./%); cp % ./%;'
-RUN mkdir -p lib64 && ls / && cp /lib64/ld-linux-x86-64.so.2 lib64/
+RUN mkdir -p lib64 && cp /lib64/ld-linux-x86-64.so.2 lib64/
 
 FROM scratch
 

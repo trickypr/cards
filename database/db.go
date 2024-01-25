@@ -17,7 +17,7 @@ func ExecCrash(db *sql.DB, query string) {
 }
 
 func InitializeDatabase() *sql.DB {
-	if _, err := os.Stat("/path/to/whatever"); errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Stat("db.sqlite"); errors.Is(err, os.ErrNotExist) {
 		os.Create("./db.sqlite")
 		slog.Info("Created database file")
 	}
