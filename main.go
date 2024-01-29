@@ -72,7 +72,7 @@ func main() {
 
 	r.Route("/decks", func(r chi.Router) {
 		r.Use(AlwaysHTML)
-		r.Use(jwtauth.Authenticator(tokenAuth))
+		r.Use(Authenticator(tokenAuth))
 
 		r.Get("/", handler.HandleDecksGet(db))
 		r.Post("/", handler.HandleDecksPost(db))
@@ -116,56 +116,49 @@ func AlwaysHTML(h http.Handler) http.Handler {
 	})
 }
 
-func AuthenticatorCard(db *sql.DB, ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		hfn := func(w http.ResponseWriter, r *http.Request) {
-			cardid := chi.URLParam(r, "cardid")
-			token, data, err := jwtauth.FromContext(r.Context())
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusUnauthorized)
-				return
-			}
+func AuthenticatorInternals(allowed func(db *sql.DB, r *http.Request, data map[string]interface{}) bool) func(db *sql.DB, ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {
+	return func(db *sql.DB, ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {
+		return func(next http.Handler) http.Handler {
+			hfn := func(w http.ResponseWriter, r *http.Request) {
+				token, data, err := jwtauth.FromContext(r.Context())
+				if err != nil {
+					http.Redirect(w, r, "/auth/login", 303)
+					return
+				}
 
-			if token == nil || jwt.Validate(token, ja.ValidateOptions()...) != nil {
-				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-				return
-			}
+				if token == nil || jwt.Validate(token, ja.ValidateOptions()...) != nil {
+					slog.Info("unauthorised", token)
+					http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+					return
+				}
 
-			if !model.IsCardOwner(db, data["id"].(string), cardid) {
-				http.Error(w, "You do not own this card", http.StatusUnauthorized)
-				return
-			}
+				if !allowed(db, r, data) {
+					http.Error(w, "You do not own this item", http.StatusUnauthorized)
+					return
+				}
 
-			// Token is authenticated, pass it through
-			next.ServeHTTP(w, r)
+				// Token is authenticated, pass it through
+				next.ServeHTTP(w, r)
+			}
+			return http.HandlerFunc(hfn)
 		}
-		return http.HandlerFunc(hfn)
 	}
 }
 
+func Authenticator(ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {
+	return AuthenticatorInternals(func(db *sql.DB, r *http.Request, data map[string]interface{}) bool { return true })(nil, ja)
+}
+
+func AuthenticatorCard(db *sql.DB, ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {
+	return AuthenticatorInternals(func(db *sql.DB, r *http.Request, data map[string]interface{}) bool {
+		cardid := chi.URLParam(r, "cardid")
+		return model.IsCardOwner(db, data["id"].(string), cardid)
+	})(db, ja)
+}
+
 func AuthenticatorDeck(db *sql.DB, ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		hfn := func(w http.ResponseWriter, r *http.Request) {
-			deckid := chi.URLParam(r, "deckid")
-			token, data, err := jwtauth.FromContext(r.Context())
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusUnauthorized)
-				return
-			}
-
-			if token == nil || jwt.Validate(token, ja.ValidateOptions()...) != nil {
-				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-				return
-			}
-
-			if !model.IsDeckOwner(db, data["id"].(string), deckid) {
-				http.Error(w, "You do not own this deck", http.StatusUnauthorized)
-				return
-			}
-
-			// Token is authenticated, pass it through
-			next.ServeHTTP(w, r)
-		}
-		return http.HandlerFunc(hfn)
-	}
+	return AuthenticatorInternals(func(db *sql.DB, r *http.Request, data map[string]interface{}) bool {
+		deckid := chi.URLParam(r, "deckid")
+		return model.IsDeckOwner(db, data["id"].(string), deckid)
+	})(db, ja)
 }

@@ -44,7 +44,7 @@ func HandleDecksPost(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		RenderDeckList(db, w)
+		http.Redirect(w, r, "/decks/"+d.ID, 303)
 	})
 }
 

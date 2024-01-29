@@ -67,7 +67,10 @@ func HandleDeckPost(db *sql.DB) http.HandlerFunc {
 			One:  r.FormValue("One"),
 			Two:  r.FormValue("Two"),
 		}
-		card.Create(db, data["id"].(string))
+
+		if card.One != "" && card.Two != "" {
+			card.Create(db, data["id"].(string))
+		}
 
 		RenderDeck(db, deck, w, r)
 	})
