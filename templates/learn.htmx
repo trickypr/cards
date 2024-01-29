@@ -1,5 +1,7 @@
 {{ define "title" }}Learn{{ end }}
 
+{{ define "head" }}{{ template "alpine" }}{{ end }}
+
 {{ define "main" }}
   <div
     x-data="{ selected: 0, result: 'evaluation', {{ template "stats" }} }"

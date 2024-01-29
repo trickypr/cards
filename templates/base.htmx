@@ -16,22 +16,21 @@
       <link rel="stylesheet" href="/static/site.css" />
       <link rel="stylesheet" href="/static/cards.css" />
 
-      <script
-        defer
-        src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"
-      ></script>
-      <script
-        defer
-        src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-      ></script>
+      {{ template "head" }}
 
-      <script
-        defer
-        src="https://cdn.jsdelivr.net/npm/htmx.org@1.9.10/dist/htmx.min.js"
-      ></script>
+
+      <script defer src="/lib/htmx.1.9.10.min.js"></script>
     </head>
     <body>
       {{ template "main" . }}
     </body>
   </html>
 {{ end }}
+
+{{ define "alpine" }}
+  <!-- Alpine is only used when learning -->
+  <script defer src="/lib/alpine__persist.3.13.5.min.js"></script>
+  <script defer src="/lib/alpine.3.13.5.min.js"></script>
+{{ end }}
+
+{{ define "head" }}{{ end }}

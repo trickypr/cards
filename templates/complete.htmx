@@ -1,6 +1,8 @@
 {{ define "title" }}Complete review{{ end }}
 
-{{ define "main" }}
+{{ define "head" }}
+  {{ template "alpine" }}
+
   <script>
     const colors = [
       "oklch(70% 0 40)",
@@ -69,7 +71,9 @@
       list-style-type: none;
     }
   </style>
+{{ end }}
 
+{{ define "main" }}
   <div x-data="{ {{ template "stats" }} }">
     <div x-data="{ count: total(stats) }" x-show="count == 0">
       <h1>No cards to review</h1>

@@ -10,6 +10,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -111,7 +112,10 @@ func main() {
 		r.Patch("/review", handler.HandleCardReviewPatch(db))
 	})
 
-	fs := http.FileServer(http.Dir("static"))
+	fs := http.FileServer(http.Dir("static/lib"))
+	r.With(CacheFor(30)).Handle("/lib/*", http.StripPrefix("/lib/", fs))
+
+	fs = http.FileServer(http.Dir("static"))
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 
 	log.Fatal(http.ListenAndServe("0.0.0.0:8080", r))
@@ -122,6 +126,18 @@ func AlwaysHTML(h http.Handler) http.Handler {
 		w.Header().Add("Content-Type", "text/html")
 		h.ServeHTTP(w, r)
 	})
+}
+
+func CacheFor(days int) func(http.Handler) http.Handler {
+	seconds := days * 24 * 60 * 60
+	ss := strconv.Itoa(seconds)
+
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Cache-Control", "max-age="+ss+",s-maxage="+ss)
+			h.ServeHTTP(w, r)
+		})
+	}
 }
 
 func AuthenticatorInternals(allowed func(db *sql.DB, r *http.Request, data map[string]interface{}) bool) func(db *sql.DB, ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {
