@@ -147,6 +147,10 @@ footer {
     margin: 1rem;
   }
 
+  body:has(footer) {
+    margin-bottom: 5rem;
+  }
+
   form input {
     padding: 0.5rem 1rem;
     font-size: 1rem;
