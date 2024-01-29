@@ -70,5 +70,11 @@ func InitializeDatabase() *sql.DB {
     )
   `)
 
+	// Clean up any left over empty cards
+	// TODO: Remove in the future
+	ExecCrash(db, `
+    DELETE FROM card WHERE one = '' AND two = ''
+  `)
+
 	return db
 }
