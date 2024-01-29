@@ -72,7 +72,7 @@ func main() {
 
 	r.Route("/decks", func(r chi.Router) {
 		r.Use(AlwaysHTML)
-		r.Use(Authenticator(tokenAuth))
+		r.Use(Authenticator(db, tokenAuth))
 
 		r.Get("/", handler.HandleDecksGet(db))
 		r.Post("/", handler.HandleDecksPost(db))
@@ -127,7 +127,6 @@ func AuthenticatorInternals(allowed func(db *sql.DB, r *http.Request, data map[s
 				}
 
 				if token == nil || jwt.Validate(token, ja.ValidateOptions()...) != nil {
-					slog.Info("unauthorised", token)
 					http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 					return
 				}
@@ -145,8 +144,10 @@ func AuthenticatorInternals(allowed func(db *sql.DB, r *http.Request, data map[s
 	}
 }
 
-func Authenticator(ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {
-	return AuthenticatorInternals(func(db *sql.DB, r *http.Request, data map[string]interface{}) bool { return true })(nil, ja)
+func Authenticator(db *sql.DB, ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {
+	return AuthenticatorInternals(func(db *sql.DB, r *http.Request, data map[string]interface{}) bool {
+		return model.UserExists(db, data["id"].(string))
+	})(db, ja)
 }
 
 func AuthenticatorCard(db *sql.DB, ja *jwtauth.JWTAuth) func(http.Handler) http.Handler {

@@ -14,6 +14,14 @@ type User struct {
 	PasswordHash string
 }
 
+func UserExists(db *sql.DB, userid string) bool {
+	count := -1
+	row := db.QueryRow("SELECT COUNT(*) FROM user WHERE id = $1", userid)
+	row.Scan(&count)
+
+	return count > 0
+}
+
 func (u *User) Create(db *sql.DB, password string) error {
 	id, err := gonanoid.New()
 	if err != nil {
