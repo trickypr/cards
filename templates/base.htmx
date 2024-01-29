@@ -5,6 +5,22 @@
       <title>{{ template "title" . }} - Cards</title>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta rel="manifest" href="/static/manifest.json" />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="128x128"
+        href="/static/favicon@2x.png"
+      />
+      <link
+        rel="icon"
+        type="image/svg+xml"
+        sizes="any"
+        href="/static/favicon.svg"
+      />
+      <link rel="apple-touch-icon" href="/static/icon512.png" />
+      <meta name="apple-mobile-web-app-title" content="Cards" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
 
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,6 +39,8 @@
     </head>
     <body>
       {{ template "main" . }}
+
+      <script defer type="module" src="/static/sw-register.js"></script>
     </body>
   </html>
 {{ end }}

@@ -54,6 +54,10 @@ func main() {
 	r.Use(middleware.Compress(5))
 	r.Use(jwtauth.Verifier(tokenAuth))
 
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/decks", 303)
+	})
+
 	r.Route("/auth", func(r chi.Router) {
 		r.Use(func(next http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -112,13 +116,22 @@ func main() {
 		r.Patch("/review", handler.HandleCardReviewPatch(db))
 	})
 
+	r.Get("/favicon.ico", static("static/favicon.ico"))
+	r.Get("/apple-touch-icon.png", static("static/icon512.png"))
+
 	fs := http.FileServer(http.Dir("static/lib"))
 	r.With(CacheFor(30)).Handle("/lib/*", http.StripPrefix("/lib/", fs))
 
 	fs = http.FileServer(http.Dir("static"))
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 
-	log.Fatal(http.ListenAndServe("0.0.0.0:8080", r))
+	if _, err := os.Stat("full-cert.crt"); errors.Is(err, os.ErrNotExist) {
+		slog.Info("Serve using http")
+		log.Fatal(http.ListenAndServe("0.0.0.0:8080", r))
+	} else {
+		slog.Info("Serve using https")
+		log.Fatal(http.ListenAndServeTLS("0.0.0.0:8080", "full-cert.crt", "private-key.key", r))
+	}
 }
 
 func AlwaysHTML(h http.Handler) http.Handler {
@@ -137,6 +150,12 @@ func CacheFor(days int) func(http.Handler) http.Handler {
 			w.Header().Add("Cache-Control", "max-age="+ss+",s-maxage="+ss)
 			h.ServeHTTP(w, r)
 		})
+	}
+}
+
+func static(path string) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, path)
 	}
 }
 

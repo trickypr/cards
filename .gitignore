@@ -27,3 +27,6 @@ secret
 
 node_modules/
 
+full-cert.crt
+private-key.key
+
