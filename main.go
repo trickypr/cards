@@ -15,6 +15,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/lestrrat-go/jwx/v2/jwt"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 
 	_ "github.com/mattn/go-sqlite3"
 	cp "github.com/otiai10/copy"
@@ -37,10 +38,17 @@ func main() {
 		slog.Info("Copied static directory")
 	}
 
+	secret, err := os.ReadFile("./secret")
+	if err != nil {
+		// TODO: Better random generator
+		secret = []byte(gonanoid.Must(32))
+		os.WriteFile("./secret", secret, 0666)
+	}
+
 	r := chi.NewRouter()
 
 	db := database.InitializeDatabase()
-	tokenAuth := jwtauth.New("HS256", []byte("secret"), nil)
+	tokenAuth := jwtauth.New("HS256", secret, nil)
 
 	r.Use(middleware.Compress(5))
 	r.Use(jwtauth.Verifier(tokenAuth))
@@ -121,13 +129,8 @@ func AuthenticatorInternals(allowed func(db *sql.DB, r *http.Request, data map[s
 		return func(next http.Handler) http.Handler {
 			hfn := func(w http.ResponseWriter, r *http.Request) {
 				token, data, err := jwtauth.FromContext(r.Context())
-				if err != nil {
+				if err != nil || token == nil || jwt.Validate(token, ja.ValidateOptions()...) != nil {
 					http.Redirect(w, r, "/auth/login", 303)
-					return
-				}
-
-				if token == nil || jwt.Validate(token, ja.ValidateOptions()...) != nil {
-					http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 					return
 				}
 

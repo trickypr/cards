@@ -23,6 +23,7 @@ cards
 go.work
 
 db.sqlite
+secret
 
 node_modules/
 
