@@ -60,14 +60,18 @@ func GetDeck(db *sql.DB, id string) (Deck, error) {
 	return deck, nil
 }
 
-func ReadAllDecks(db *sql.DB) ([]Deck, error) {
+func ReadAllDecks(db *sql.DB, userId string) ([]Deck, error) {
 	decks := []Deck{}
-	s, err := db.Prepare("SELECT id, name, description, side_one_lang, side_two_lang FROM deck")
+	s, err := db.Prepare(`
+    SELECT id, name, description, side_one_lang, side_two_lang 
+    FROM deck
+    WHERE owner = $1
+  `)
 	if err != nil {
 		return decks, err
 	}
 
-	rows, err := s.Query()
+	rows, err := s.Query(userId)
 	if err != nil {
 		return decks, err
 	}

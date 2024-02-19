@@ -10,8 +10,8 @@ import (
 	"github.com/go-chi/jwtauth/v5"
 )
 
-func RenderDeckList(db *sql.DB, w http.ResponseWriter) {
-	decks, err := model.ReadAllDecks(db)
+func RenderDeckList(db *sql.DB, w http.ResponseWriter, userId string) {
+	decks, err := model.ReadAllDecks(db, userId)
 	if err != nil {
 		slog.Error("fetching decks", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -26,7 +26,9 @@ func RenderDeckList(db *sql.DB, w http.ResponseWriter) {
 
 func HandleDecksGet(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		RenderDeckList(db, w)
+		_, data, _ := jwtauth.FromContext(r.Context())
+
+		RenderDeckList(db, w, data["id"].(string))
 	})
 }
 
