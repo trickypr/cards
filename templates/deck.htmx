@@ -17,10 +17,42 @@
       margin-top: -0.75rem;
       color: var(--gray-40);
     }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      button,
+      a {
+        height: 100%;
+        background: none;
+        border: none;
+      }
+
+      button:hover {
+        background-color: var(--gray-90);
+      }
+
+      :last-child {
+        flex-grow: 1;
+      }
+    }
   </style>
 
-  <h1>{{ .Deck.Name }}</h1>
-  <p class="sub">{{ .Deck.Description }}</p>
+  <div class="header">
+    <a href="/decks/"
+      ><button>
+        <img
+          src="https://cdn.jsdelivr.net/npm/@tabler/icons@2.46.0/icons/chevron-left.svg"
+          alt="Back icon"
+        /></button
+    ></a>
+    <div>
+      <h1>{{ .Deck.Name }}</h1>
+      <p class="sub">{{ .Deck.Description }}</p>
+    </div>
+  </div>
 
   {{ if (eq (len .Cards) 0) }}
     <p>No cards added yet</p>
