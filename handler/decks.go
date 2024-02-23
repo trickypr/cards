@@ -46,7 +46,7 @@ func HandleDecksPost(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		http.Redirect(w, r, "/decks/"+d.ID, 303)
+		w.Header().Add("HX-Location", "/decks/"+d.ID)
 	})
 }
 

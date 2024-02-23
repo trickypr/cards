@@ -81,10 +81,13 @@ func InitializeDatabase() *sql.DB {
     )
   `)
 
-	// Clean up any left over empty cards
+	// Clean up any left over empty cards & decks
 	// TODO: Remove in the future
 	ExecCrash(db, `
     DELETE FROM card WHERE trim(one) = '' AND trim(two) = ''
+  `)
+	ExecCrash(db, `
+    DELETE FROM deck WHERE trim(name) = '' AND trim(description) = ''
   `)
 
 	return db

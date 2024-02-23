@@ -1,17 +1,33 @@
 {{ define "title" }}Create Card{{ end }}
 
+{{ define "head" }}{{ template "htmx" }}{{ end }}
+
 {{ define "main" }}
   <h1>Create Card</h1>
 
   <form action="/decks/{{ .ID }}" method="post">
     <div>
       <label for="One">Side one:</label>
-      <input type="text" name="One" id="One" />
+      <input
+        type="text"
+        name="One"
+        id="One"
+        required
+        onkeyup="this.setCustomValidity('')"
+        hx-on::validate="if (this.value.trim() == '') { this.setCustomValidity('Your flashcard must contain more than just spaces');htmx.find('form').reportValidity() }"
+      />
     </div>
 
     <div>
       <label for="Two">Side two:</label>
-      <input type="text" name="Two" id="Two" />
+      <input
+        type="text"
+        name="Two"
+        id="Two"
+        required
+        onkeyup="this.setCustomValidity('')"
+        hx-on::validate="if (this.value.trim() == '') { this.setCustomValidity('Your flashcard must contain more than just spaces');htmx.find('form').reportValidity() }"
+      />
     </div>
 
     <footer>
