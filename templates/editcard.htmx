@@ -1,5 +1,7 @@
 {{ define "title" }}Edit Card{{ end }}
 
+{{ define "head" }}{{ template "htmx" }}{{ end }}
+
 {{ define "main" }}
   <h1>Edit Card</h1>
 

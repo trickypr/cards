@@ -83,6 +83,15 @@ func main() {
 		r.Post("/signup", handler.HandleSignupPost(db, tokenAuth))
 	})
 
+	r.Route("/settings", func(r chi.Router) {
+		r.Use(AlwaysHTML)
+		r.Use(Authenticator(db, tokenAuth))
+
+		r.Get("/", handler.HandleSettingsGet(db))
+		r.Post("/apikeys", handler.HandleCreateApiKeys(db))
+		r.Delete("/apikeys/{key}", handler.HandleDeleteApiKey(db))
+	})
+
 	r.Route("/decks", func(r chi.Router) {
 		r.Use(AlwaysHTML)
 		r.Use(Authenticator(db, tokenAuth))

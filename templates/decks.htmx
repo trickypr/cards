@@ -1,5 +1,7 @@
 {{ define "title" }}Decks{{ end }}
 
+{{ define "head" }}{{ template "htmx" }}{{ end }}
+
 {{ define "main" }}
   <style>
     li {
@@ -20,9 +22,24 @@
     }
   </style>
 
-  <h1>Decks</h1>
+  <div>
+    <div class="header">
+      <div class="grow">
+        <h1>Decks</h1>
+      </div>
 
-  <ul class="object-list">
+      <a href="/settings" hx-boost="true">
+        <button>
+          <img src="/static/icons/settings.svg" alt="Open settings" />
+        </button>
+      </a>
+    </div>
+  </div>
+
+  <ul
+    class="object-list object-list--hover object-list--arrow depth-border"
+    hx-boost="true"
+  >
     {{ if (eq (len .) 0) }}
       <p>No decks</p>
     {{ end }}

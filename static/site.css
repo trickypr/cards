@@ -21,12 +21,8 @@
   --gray-98: oklch(98% 0 141);
 }
 
-body {
-  font-family: "Lora", serif;
-  background-color: var(--gray-98);
-  margin: 1rem auto;
-  max-width: 40rem;
-}
+/* Note that body styles are put inline in the head of every page 
+   to reduce view flickering */
 
 h1,
 h2,
@@ -46,7 +42,7 @@ p {
   margin-bottom: 0.5rem;
 }
 
-ul.object-list {
+.depth-border {
   border: var(--gray-95) solid 0.125rem;
   border-bottom: var(--gray-95) solid 0.25rem;
   border-radius: 1rem;
@@ -54,36 +50,38 @@ ul.object-list {
 
   padding: 0;
   background-color: white;
+}
 
+ul.object-list {
   li {
     list-style-type: none;
     padding: 0.5rem 0.75rem;
     position: relative;
     cursor: pointer;
-
-    &:hover {
-      background-color: var(--gray-98);
-    }
-
-    &::after {
-      content: "";
-      background-image: url(https://cdn.jsdelivr.net/npm/@tabler/icons@2.46.0/icons/chevron-right.svg);
-      background-size: 100% auto;
-      display: block;
-
-      width: 1rem;
-      height: 1rem;
-      position: absolute;
-      right: 0.5rem;
-      top: 50%;
-      transform: translateY(-50%);
-    }
   }
 
   a {
     text-decoration: none;
     color: black;
   }
+}
+
+ul.object-list--hover li:hover {
+  background-color: var(--gray-98);
+}
+
+ul.object-list--arrow li::after {
+  content: "";
+  background-image: url(/static/icons/chevron-right.svg);
+  background-size: 100% auto;
+  display: block;
+
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 button {
@@ -100,13 +98,34 @@ button {
   width: 100%;
   cursor: pointer;
 
+  img {
+    width: 1em;
+    height: 1em;
+  }
+
   &:hover {
     background-color: var(--gray-98);
   }
+
+  &.small {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+.flex {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
 }
 
 .grow {
   flex-grow: 1;
+}
+
+.shrink {
+  flex-shrink: 1;
+  width: unset;
 }
 
 form {
@@ -174,5 +193,22 @@ footer {
     a {
       text-decoration: none;
     }
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  button,
+  a {
+    height: 100%;
+    background: none;
+    border: none;
+  }
+
+  button:hover {
+    background-color: var(--gray-90);
   }
 }

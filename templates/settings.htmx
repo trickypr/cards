@@ -1,0 +1,18 @@
+{{ define "title" }}Settings{{ end }}
+
+{{ define "head" }}{{ template "htmx" }}{{ end }}
+
+{{ define "main" }}
+  <div class="header" hx-boost="true">
+    <a href="/decks/"
+      ><button>
+        <img src="/static/icons/chevron-left.svg" alt="Back icon" /></button
+    ></a>
+    <div class="grow">
+      <h1>Settings</h1>
+    </div>
+  </div>
+
+  <h2>API Keys</h2>
+  {{ template "apiKeys" .ApiKeys }}
+{{ end }}

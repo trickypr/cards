@@ -1,5 +1,7 @@
 {{ define "title" }}"{{ .Deck.Name }}"{{ end }}
 
+{{ define "head" }}{{ template "htmx" }}{{ end }}
+
 {{ define "main" }}
   <style>
     li {
@@ -17,38 +19,14 @@
       margin-top: -0.75rem;
       color: var(--gray-40);
     }
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-
-      button,
-      a {
-        height: 100%;
-        background: none;
-        border: none;
-      }
-
-      button:hover {
-        background-color: var(--gray-90);
-      }
-
-      :last-child {
-        flex-grow: 1;
-      }
-    }
   </style>
 
-  <div class="header">
+  <div class="header" hx-boost="true">
     <a href="/decks/"
       ><button>
-        <img
-          src="https://cdn.jsdelivr.net/npm/@tabler/icons@2.46.0/icons/chevron-left.svg"
-          alt="Back icon"
-        /></button
+        <img src="/static/icons/chevron-left.svg" alt="Back icon" /></button
     ></a>
-    <div>
+    <div class="grow">
       <h1>{{ .Deck.Name }}</h1>
       <p class="sub">{{ .Deck.Description }}</p>
     </div>
@@ -57,7 +35,7 @@
   {{ if (eq (len .Cards) 0) }}
     <p>No cards added yet</p>
   {{ else }}
-    <ul class="object-list">
+    <ul class="object-list object-list--hover object-list--arrow depth-border">
       {{ range .Cards }}
         <li>
           <a href="/decks/{{ $.Deck.ID }}/card/{{ .ID }}">

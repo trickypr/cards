@@ -70,10 +70,21 @@ func InitializeDatabase() *sql.DB {
     )
   `)
 
+	ExecCrash(db, `
+    CREATE TABLE IF NOT EXISTS api_key (
+      id      TEXT PRIMARY KEY,
+      name    TEXT NOT NULL,
+      owner   TEXT NOT NULL,
+      api_key TEXT NOT NULL,
+
+      CONSTRAINT fk_owner FOREIGN KEY (owner) REFERENCES user(id)
+    )
+  `)
+
 	// Clean up any left over empty cards
 	// TODO: Remove in the future
 	ExecCrash(db, `
-    DELETE FROM card WHERE one = '' AND two = ''
+    DELETE FROM card WHERE trim(one) = '' AND trim(two) = ''
   `)
 
 	return db

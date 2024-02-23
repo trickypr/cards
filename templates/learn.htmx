@@ -1,6 +1,9 @@
 {{ define "title" }}Learn{{ end }}
 
-{{ define "head" }}{{ template "alpine" }}{{ end }}
+{{ define "head" }}
+  {{ template "alpine" }}
+  {{ template "htmx" }}
+{{ end }}
 
 {{ define "main" }}
   <div

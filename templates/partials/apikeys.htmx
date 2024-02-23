@@ -1,0 +1,54 @@
+{{ define "apiKeys" }}
+  {{ if (eq (len .) 0) }}
+    <p id="no-apikeys">No api keys added yet</p>
+  {{ end }}
+  <ul
+    id="apikeys"
+    class="depth-border object-list"
+    {{ if (eq (len .) 0) }}hidden="true"{{ end }}
+  >
+    {{ range . }}{{ template "apikey-hidden" . }}{{ end }}
+  </ul>
+
+  <form
+    hx-post="/settings/apikeys"
+    hx-target="#apikeys"
+    hx-swap="beforeend"
+    hx-on::after-request="document.getElementById('apikeys').hidden = false;document.getElementById('no-apikeys').remove()"
+    class="flex"
+  >
+    <input
+      type="text"
+      name="keyname"
+      class="grow"
+      placeholder="Api key name"
+      required
+    />
+    <button type="submit" class="shrink">Create</button>
+  </form>
+{{ end }}
+
+{{ define "apikey-hidden" }}
+  <li class="flex">
+    <div class="grow">
+      {{ .Name }}
+    </div>
+    <button
+      class="shrink small"
+      hx-delete="/settings/apikeys/{{ .ID }}"
+      hx-target="closest li"
+      hx-swap="delete"
+    >
+      <img src="/static/icons/trash-x.svg" alt="Delete api key" />
+    </button>
+  </li>
+{{ end }}
+
+{{ define "apikey" }}
+  <li>
+    {{ .Name }}
+    <div style="color: var(--gray-40); font-size: 0.75rem;">
+      {{ .ApiKey }}
+    </div>
+  </li>
+{{ end }}
