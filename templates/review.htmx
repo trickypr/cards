@@ -5,6 +5,8 @@
   {{ template "htmx" }}
 {{ end }}
 
+{{ define "end" }}{{ template "mathjax" }}{{ end }}
+
 {{ define "main" }}
   <div
     x-data="{ selected: 0, result: 'review', {{ template "stats" }} }"

@@ -48,6 +48,7 @@
       {{ template "main" . }}
 
       <script defer type="module" src="/static/sw-register.js"></script>
+      {{ template "end" }}
     </body>
   </html>
 {{ end }}
@@ -62,4 +63,20 @@
   <script defer src="/lib/htmx.1.9.10.min.js"></script>
 {{ end }}
 
+{{ define "mathjax" }}
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+
+  <script defer src="/lib/mathjax__tex-svg.3.2.2.js"></script>
+{{ end }}
+
 {{ define "head" }}{{ end }}
+{{ define "end" }}{{ end }}

@@ -1,6 +1,7 @@
 {{ define "title" }}"{{ .Deck.Name }}"{{ end }}
 
 {{ define "head" }}{{ template "htmx" }}{{ end }}
+{{ define "end" }}{{ template "mathjax" }}{{ end }}
 
 {{ define "main" }}
   <style>
