@@ -22,7 +22,7 @@ func InitializeDatabase() *sql.DB {
 		slog.Info("Created database file")
 	}
 
-	db, err := sql.Open("sqlite3", "file:./db.sqlite")
+	db, err := sql.Open("sqlite3", "file:./data/db.sqlite")
 	if err != nil {
 		log.Fatal(err)
 	}
