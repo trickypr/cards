@@ -23,27 +23,29 @@ import (
 )
 
 func main() {
-	if _, err := os.Stat("templates"); errors.Is(err, os.ErrNotExist) {
-		err := cp.Copy("/templates", "./templates/")
-		if err != nil {
-			log.Fatal(err)
-		}
-		slog.Info("Copied templates directory")
+	slog.Info("Main has run")
+
+	if _, err := os.Stat("data"); errors.Is(err, os.ErrNotExist) {
+		log.Fatal("You need to create a data folder!")
 	}
 
-	if _, err := os.Stat("static"); errors.Is(err, os.ErrNotExist) {
-		err := cp.Copy("/static", "./static/")
-		if err != nil {
-			log.Fatal(err)
-		}
-		slog.Info("Copied static directory")
+	err := cp.Copy("/templates", "./templates/")
+	if err != nil {
+		log.Fatal(err)
 	}
+	slog.Info("Copied templates directory")
+
+	err = cp.Copy("/static", "./static/")
+	if err != nil {
+		log.Fatal(err)
+	}
+	slog.Info("Copied static directory")
 
 	secret, err := os.ReadFile("./secret")
 	if err != nil {
 		// TODO: Better random generator
 		secret = []byte(gonanoid.Must(32))
-		os.WriteFile("./secret", secret, 0666)
+		os.WriteFile("./data/secret", secret, 0666)
 	}
 
 	r := chi.NewRouter()

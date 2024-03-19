@@ -30,7 +30,6 @@ FROM scratch
 
 COPY --chown=0:0 --from=builder /dist /
 
-USER 65534
 WORKDIR /data
 
 EXPOSE 8080
