@@ -45,9 +45,10 @@ func main() {
 		slog.Info("Skipping non-dev prep")
 	}
 
-	secret, err := os.ReadFile("./secret")
+	secret, err := os.ReadFile("./data/secret")
 	if err != nil {
 		// TODO: Better random generator
+		slog.Info("Generating new secret")
 		secret = []byte(gonanoid.Must(32))
 		os.WriteFile("./data/secret", secret, 0666)
 	}
@@ -110,6 +111,8 @@ func main() {
 
 			r.Get("/", handler.HandleDeckGet(db))
 			r.Post("/", handler.HandleDeckPost(db))
+			r.Put("/", handler.HandleDeckPut(db))
+			r.Get("/edit", handler.HandleDeckEditGet(db))
 			r.Get("/create", handler.HandleCreateCardGet(db))
 			r.Get("/learn", handler.HandleLearnGet(db))
 			r.Get("/review", handler.HandleReviewGet(db))

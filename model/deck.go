@@ -44,6 +44,21 @@ func (d *Deck) Create(db *sql.DB, owner string) error {
 	return s.QueryRow(d.ID, d.Name, d.Description, d.SideOneLang, d.SideTwoLang, owner).Scan(&d.ID)
 }
 
+func (d *Deck) Update(db *sql.DB) error {
+	s, err := db.Prepare(
+		`
+		UPDATE deck
+		SET name = ?, description = ?, side_one_lang = ?, side_two_lang = ?
+		WHERE id = ?
+		`,
+	)
+	if err != nil {
+		return err
+	}
+	_, err = s.Exec(d.Name, d.Description, d.SideOneLang, d.SideTwoLang, d.ID)
+	return err
+}
+
 func GetDeck(db *sql.DB, id string) (Deck, error) {
 	deck := Deck{}
 

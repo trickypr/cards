@@ -43,7 +43,6 @@
             packages = with pkgs; [
               # go (version is specified by overlay)
               go
-              gcc
 
               # goimports, godoc, etc.
               gotools
@@ -52,6 +51,9 @@
               golangci-lint
               air
               gopls
+              gcc
+              templ
+              htmx-lsp
             ];
           };
         }

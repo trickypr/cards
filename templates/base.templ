@@ -1,0 +1,69 @@
+package templates
+
+templ Layout(title string, head templ.Component, end templ.Component) {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>{ title }</title>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<meta rel="manifest" href="/static/manifest.json"/>
+			<link rel="icon" type="image/png" sizes="128x128" href="/static/favicon@2x.png"/>
+			<link rel="icon" type="image/svg+xml" sizes="any" href="/static/favicon.svg"/>
+			<link rel="apple-touch-icon" href="/static/icon512.png"/>
+			<meta name="apple-mobile-web-app-title" content="Cards"/>
+			<meta name="apple-mobile-web-app-capable" content="yes"/>
+			<!-- Global styles to reduce flickering on page load -->
+			<style>
+    body {
+      font-family: "Lora", serif;
+      background-color: oklch(98% 0 141);
+      /* var(--gray-98) */
+      margin: 1rem auto;
+      max-width: 40rem;
+    }
+  </style>
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			<link
+				href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&family=Lora&display=swap"
+				rel="stylesheet"
+			/>
+			<link rel="stylesheet" href="/static/site.css"/>
+			<link rel="stylesheet" href="/static/cards.css"/>
+			@head
+		</head>
+		<body>
+			{ children... }
+			<script defer type="module" src="/static/sw-register.js"></script>
+			@end
+		</body>
+	</html>
+}
+
+templ alpine() {
+	<!-- Alpine is only used when learning -->
+	<script defer src="/lib/alpine__persist.3.13.5.min.js"></script>
+	<script defer src="/lib/alpine.3.13.5.min.js"></script>
+}
+
+templ htmx() {
+	<script defer src="/lib/htmx.1.9.10.min.js"></script>
+}
+
+templ mathjax() {
+	<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+	<script defer src="/lib/mathjax__tex-svg.3.2.2.js"></script>
+}
+
+templ blank() {
+}

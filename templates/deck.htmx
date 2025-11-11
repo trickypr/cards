@@ -4,59 +4,60 @@
 {{ define "end" }}{{ template "mathjax" }}{{ end }}
 
 {{ define "main" }}
-  <style>
-    li {
-      .qstn {
-        font-weight: 600;
-      }
-
-      .ans {
-        color: var(--gray-40);
-        font-size: 0.75rem;
-      }
+<style>
+  li {
+    .qstn {
+      font-weight: 600;
     }
 
-    .sub {
-      margin-top: -0.75rem;
+    .ans {
       color: var(--gray-40);
+      font-size: 0.75rem;
     }
-  </style>
+  }
 
-  <div class="header" hx-boost="true">
-    <a href="/decks/"
-      ><button>
-        <img src="/static/icons/chevron-left.svg" alt="Back icon" /></button
-    ></a>
-    <div class="grow">
-      <h1>{{ .Deck.Name }}</h1>
-      <p class="sub">{{ .Deck.Description }}</p>
-    </div>
+  .sub {
+    margin-top: -0.75rem;
+    color: var(--gray-40);
+  }
+</style>
+
+<div class="header" hx-boost="true">
+  <a href="/decks/"><button>
+      <img src="/static/icons/chevron-left.svg" alt="Back icon" /></button></a>
+  <div class="grow">
+    <h1>{{ .Deck.Name }}</h1>
+    <p class="sub">{{ .Deck.Description }}</p>
   </div>
+  <div>
+    <a href="/decks/{{ $.Deck.ID }}/edit">
+      <button><img src="/static/icons/edit.svg" alt="Back icon" /></button>
+    </a>
+  </div>
+</div>
 
-  {{ if (eq (len .Cards) 0) }}
-    <p>No cards added yet</p>
-  {{ else }}
-    <ul class="object-list object-list--hover object-list--arrow depth-border">
-      {{ range .Cards }}
-        <li>
-          <a href="/decks/{{ $.Deck.ID }}/card/{{ .ID }}">
-            <div class="qstn">
-              {{ .One }}
-            </div>
-            <div class="ans">
-              {{ .Two }}
-            </div>
-          </a>
-        </li>
-      {{ end }}
-    </ul>
+{{ if (eq (len .Cards) 0) }}
+<p>No cards added yet</p>
+{{ else }}
+<ul class="object-list object-list--hover object-list--arrow depth-border">
+  {{ range .Cards }}
+  <li>
+    <a href="/decks/{{ $.Deck.ID }}/card/{{ .ID }}">
+      <div class="qstn">
+        {{ .One }}
+      </div>
+      <div class="ans">
+        {{ .Two }}
+      </div>
+    </a>
+  </li>
   {{ end }}
+</ul>
+{{ end }}
 
 
-  <footer>
-    <a href="/decks/{{ .Deck.ID }}/create"><button>New Card</button></a>
-    <a href="/decks/{{ .Deck.ID }}/learn" class="grow"
-      ><button>Learn</button></a
-    >
-  </footer>
+<footer>
+  <a href="/decks/{{ .Deck.ID }}/create"><button>New Card</button></a>
+  <a href="/decks/{{ .Deck.ID }}/learn" class="grow"><button>Learn</button></a>
+</footer>
 {{ end }}

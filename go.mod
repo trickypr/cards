@@ -1,8 +1,11 @@
 module cards
 
-go 1.21.5
+go 1.23.0
+
+toolchain go1.24.10
 
 require (
+	github.com/a-h/templ v0.3.960
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-chi/jwtauth/v5 v5.3.0
 	github.com/lestrrat-go/jwx/v2 v2.0.17
@@ -21,6 +24,6 @@ require (
 	github.com/lestrrat-go/iter v1.0.2 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
-	golang.org/x/sync v0.3.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
+	golang.org/x/sys v0.34.0 // indirect
 )

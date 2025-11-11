@@ -1,0 +1,45 @@
+package templates
+
+import "cards/model"
+
+templ EditDeck(deck model.Deck) {
+	@Layout("Edit deck", htmx(), blank()) {
+		<div class="header">
+			<a href={ "/decks/" + deck.ID }>
+				<button>
+					<img src="/static/icons/chevron-left.svg" alt="Back icon"/>
+				</button>
+			</a>
+			<h1>Edit deck</h1>
+		</div>
+		<form hx-put={ "/decks/" + deck.ID } hx-target="body">
+			<div>
+				<label for="Name">Name</label>
+				<input
+					type="text"
+					name="Name"
+					id="Name"
+					required
+					value={ deck.Name }
+					onkeyup="this.setCustomValidity('')"
+					hx-on::validation:validate="if (this.value.trim() == '') { console.log(htmx.find('form'));this.setCustomValidity('Your flashcard must contain more than just spaces');htmx.find('form').reportValidity() }"
+				/>
+			</div>
+			<div>
+				<label for="Description">Description</label>
+				<input
+					type="text"
+					name="Description"
+					id="Description"
+					value={ deck.Description }
+					onkeyup="this.setCustomValidity('')"
+					hx-on::validation:validate="if (this.value.trim() == '') { this.setCustomValidity('Your flashcard must contain more than just spaces');htmx.find('form').reportValidity() }"
+				/>
+			</div>
+			<footer>
+				<a href={ "/decks/" + deck.ID }><button>Cancel</button></a>
+				<button type="submit">Update Deck</button>
+			</footer>
+		</form>
+	}
+}
