@@ -29,17 +29,21 @@ func main() {
 		log.Fatal("You need to create a data folder!")
 	}
 
-	err := cp.Copy("/templates", "./templates/")
-	if err != nil {
-		log.Fatal(err)
-	}
-	slog.Info("Copied templates directory")
+	if _, err := os.Stat(".git"); errors.Is(err, os.ErrNotExist) {
+		err := cp.Copy("/templates", "./templates/")
+		if err != nil {
+			log.Fatal(err)
+		}
+		slog.Info("Copied templates directory")
 
-	err = cp.Copy("/static", "./static/")
-	if err != nil {
-		log.Fatal(err)
+		err = cp.Copy("/static", "./static/")
+		if err != nil {
+			log.Fatal(err)
+		}
+		slog.Info("Copied static directory")
+	} else {
+		slog.Info("Skipping non-dev prep")
 	}
-	slog.Info("Copied static directory")
 
 	secret, err := os.ReadFile("./secret")
 	if err != nil {
