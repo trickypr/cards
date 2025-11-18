@@ -156,6 +156,7 @@ func CardsToLearn(db *sql.DB, deckid string) ([]Card, error) {
     FROM card
     WHERE deck = $1 
           AND (julianday("now") - julianday(last_review)) >= interrepition_interval
+		ORDER BY RANDOM()
   `)
 	if err != nil {
 		return nil, err
@@ -176,6 +177,7 @@ func CardsToReview(db *sql.DB, deckid string) ([]Card, error) {
     FROM card
     WHERE deck = $1 
           AND last_quality < 4
+		ORDER BY RANDOM()
   `)
 	if err != nil {
 		return nil, err
