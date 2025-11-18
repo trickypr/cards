@@ -14,7 +14,7 @@ type ApiKey struct {
 }
 
 func (a *ApiKey) Create(db *sql.DB) error {
-	id, err := gonanoid.New()
+	id, err := gonanoid.New(10)
 	if err != nil {
 		return err
 	}
